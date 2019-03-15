@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="live_view">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=KK-HQ-MES-01;Initial Catalog=kkfactorydw</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>7bc43532-04d7-4509-b724-15854cd4541f</DataSourceID>
+</RptDataSource>
