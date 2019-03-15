@@ -137,7 +137,7 @@
         <CommandText>SELECT TOP(5) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
 ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
 FROM stoppages_lives
-WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour  between 6 and 14 and stoppages_lives.category = 'ENGINEERING'
+WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour &gt; 6 and dtHour &lt; 14 and  stoppages_lives.category = 'ENGINEERING'
 GROUP BY stoppages_lives.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
@@ -166,7 +166,7 @@ order by sum(durration) desc</CommandText>
         </QueryParameters>
         <CommandText>SELECT TOP(5) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration
 FROM stoppages_lives
-WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour between 6 and 14 and stoppages_lives.category = 'MANAGEMENT' AND stoppages_lives.eventasset &lt;&gt; 'SLOW RUN BURGER MACHINE'
+WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour &gt; 6 and dtHour &lt; 14 and stoppages_lives.category = 'MANAGEMENT' AND stoppages_lives.eventasset &lt;&gt; 'SLOW RUN BURGER MACHINE'
 GROUP BY stoppages_lives.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
