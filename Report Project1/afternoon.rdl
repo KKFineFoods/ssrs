@@ -3,8 +3,8 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="afternoon">
-      <DataSourceReference>live_view</DataSourceReference>
+    <DataSource Name="afternoons">
+      <DataSourceReference>local</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>71576bdf-5a4a-405c-a4bb-9fb5b3137d35</rd:DataSourceID>
     </DataSource>
@@ -12,16 +12,13 @@
   <DataSets>
     <DataSet Name="JobRuns">
       <Query>
-        <DataSourceName>afternoon</DataSourceName>
+        <DataSourceName>afternoons</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@dateto">
-            <Value>=Parameters!dateto.Value</Value>
-          </QueryParameter>
         </QueryParameters>
-        <CommandText>select * FROM [kkfactorydw].[dbo].[jobInfo] where actFinishDate between @datefrom and @dateto and shift6to6 = @datefrom and hour  between 14 and 22 </CommandText>
+        <CommandText>select * FROM jobInfo_v where actFinishDate = @datefrom and hour  between 14 and 22 and cellAssetDesc not like 'U1%'</CommandText>
       </Query>
       <Fields>
         <Field Name="cellAssetDesc">
@@ -128,17 +125,16 @@
     </DataSet>
     <DataSet Name="EngDt">
       <Query>
-        <DataSourceName>afternoon</DataSourceName>
+        <DataSourceName>afternoons</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(5) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
-ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
-FROM stoppages_lives
-WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour  between 14 and 22 and stoppages_lives.category = 'ENGINEERING'
-GROUP BY stoppages_lives.eventasset
+        <CommandText>SELECT TOP(5) stoppages_M.eventasset,sum(stoppages_M.durration)duration
+FROM stoppages_M
+WHERE  stoppages_M.shift6to6 = @datefrom and  dtHour between 14 and 22 and stoppages_M.category = 'ENGINEERING' AND stoppages_M.eventasset &lt;&gt; 'SLOW RUN BURGER MACHINE'
+GROUP BY stoppages_M.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -150,25 +146,21 @@ order by sum(durration) desc</CommandText>
           <DataField>duration</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="RowNumber">
-          <DataField>RowNumber</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="MANdt">
       <Query>
-        <DataSourceName>afternoon</DataSourceName>
+        <DataSourceName>afternoons</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(5) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
+        <CommandText>SELECT TOP(5) stoppages_M.eventasset,sum(stoppages_M.durration)duration,
 ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
-FROM stoppages_lives
-WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour  &gt; 14 and dtHour&lt; 22 and stoppages_lives.category = 'MANAGEMENT'AND stoppages_lives.eventasset &lt;&gt; 'SLOW RUN BURGER MACHINE'
-GROUP BY stoppages_lives.eventasset
+FROM stoppages_M
+WHERE  stoppages_M.shift6to6 = @datefrom and  dtHour  &gt; 14 and dtHour&lt; 22 and stoppages_M.category = 'MANAGEMENT'AND stoppages_M.eventasset &lt;&gt; 'SLOW RUN BURGER MACHINE'
+GROUP BY stoppages_M.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -188,16 +180,16 @@ order by sum(durration) desc</CommandText>
     </DataSet>
     <DataSet Name="downtimeChart">
       <Query>
-        <DataSourceName>afternoon</DataSourceName>
+        <DataSourceName>afternoons</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT stoppages_lives.linename,sum(stoppages_lives.durration)duration
-FROM stoppages_lives
-WHERE  stoppages_lives.shift6to6 = @datefrom  and  dtHour between 14 and 22
-GROUP BY stoppages_lives.linename
+        <CommandText>SELECT stoppages_M.linename,sum(stoppages_M.durration)duration
+FROM stoppages_M
+WHERE  stoppages_M.shift6to6 = @datefrom  and  dtHour between 14 and 22
+GROUP BY stoppages_M.linename
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -284,8 +276,8 @@ order by sum(durration) desc</CommandText>
             <rd:DefaultName>Textbox33</rd:DefaultName>
             <Top>1.59659cm</Top>
             <Left>1.5637cm</Left>
-            <Height>1.02333cm</Height>
-            <Width>8.45312cm</Width>
+            <Height>0.5559cm</Height>
+            <Width>7.77902cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -1617,16 +1609,50 @@ order by sum(durration) desc</CommandText>
               </Border>
             </Style>
           </Tablix>
-          <Rectangle Name="Rectangle3">
+          <Textbox Name="Textbox4">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Parameters!datefrom.Value</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>dddd, d MMMM yyyy</Format>
+                      <Color>DimGray</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>1.55249cm</Top>
+            <Left>9.41328cm</Left>
+            <Height>0.6cm</Height>
+            <Width>5.56097cm</Width>
+            <ZIndex>8</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Rectangle Name="Rectangle1">
             <PageBreak>
-              <BreakLocation>End</BreakLocation>
+              <BreakLocation>Start</BreakLocation>
             </PageBreak>
             <KeepTogether>true</KeepTogether>
-            <Top>11.98245cm</Top>
-            <Left>2.14917cm</Left>
-            <Height>2.5cm</Height>
+            <Top>11.43449cm</Top>
+            <Left>1.5637cm</Left>
+            <Height>0.38333cm</Height>
             <Width>5cm</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1634,7 +1660,7 @@ order by sum(durration) desc</CommandText>
             </Style>
           </Rectangle>
         </ReportItems>
-        <Height>5.70175in</Height>
+        <Height>4.71519in</Height>
         <Style />
       </Body>
       <Width>6.08848in</Width>
@@ -1660,15 +1686,6 @@ order by sum(durration) desc</CommandText>
       </DefaultValue>
       <Prompt>datefrom</Prompt>
     </ReportParameter>
-    <ReportParameter Name="dateto">
-      <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=cdate(format(DateAdd("d", 0, Now),"yyyy-MM-dd"))</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>dateto</Prompt>
-    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -1679,11 +1696,6 @@ order by sum(durration) desc</CommandText>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>datefrom</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>dateto</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

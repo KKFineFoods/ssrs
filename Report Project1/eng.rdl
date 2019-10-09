@@ -3,16 +3,16 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="engDT">
-      <DataSourceReference>live_view</DataSourceReference>
+    <DataSource Name="engDTs">
+      <DataSourceReference>local</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>f71d61d4-fdb4-4b59-8cf5-4833db62d9ac</rd:DataSourceID>
+      <rd:DataSourceID>095988e2-4dee-4fc3-a20f-c0c7b2cd1b15</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="byLine">
       <Query>
-        <DataSourceName>engDT</DataSourceName>
+        <DataSourceName>engDTs</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -21,12 +21,12 @@
             <Value>=Parameters!dateto.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(10) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
+        <CommandText>SELECT TOP(10) eventasset,sum(durration)duration,
 ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
-FROM stoppages_lives
-WHERE stoppages_lives.category = 'ENGINEERING'
-AND stoppages_lives.shift6to6 BETWEEN @datefrom AND @dateto
-GROUP BY stoppages_lives.eventasset
+FROM stoppages_M
+WHERE stoppages_M.category = 'ENGINEERING' 
+AND stoppages_M.shift6to6 BETWEEN @datefrom AND @dateto 
+GROUP BY stoppages_M.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -46,7 +46,7 @@ order by sum(durration) desc</CommandText>
     </DataSet>
     <DataSet Name="thisIsTheByLine">
       <Query>
-        <DataSourceName>engDT</DataSourceName>
+        <DataSourceName>engDTs</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -55,12 +55,11 @@ order by sum(durration) desc</CommandText>
             <Value>=Parameters!dateto.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT linename,sum(durration)duration
-FROM stoppages_lives
-WHERE category = 'ENGINEERING' AND
-shift6to6 BETWEEN @datefrom AND @dateto
-GROUP BY linename
-ORDER BY duration</CommandText>
+        <CommandText>SELECT  stoppages_m.linename, sum(stoppages_m.durration) as duration
+FROM stoppages_m
+WHERE stoppages_M.category = 'ENGINEERING' AND
+stoppages_m.shift6to6 BETWEEN @datefrom AND @dateto 
+GROUP BY  stoppages_m.linename</CommandText>
       </Query>
       <Fields>
         <Field Name="linename">
@@ -244,8 +243,8 @@ ORDER BY duration</CommandText>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>byLine</DataSetName>
-            <Top>9.82452cm</Top>
-            <Left>12.8934cm</Left>
+            <Top>9.04841cm</Top>
+            <Left>12.94223cm</Left>
             <Height>1.2cm</Height>
             <Width>11.47882cm</Width>
             <Style>
@@ -439,7 +438,7 @@ ORDER BY duration</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox16">
+                        <Textbox Name="duration2">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -457,7 +456,7 @@ ORDER BY duration</CommandText>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox16</rd:DefaultName>
+                          <rd:DefaultName>duration2</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -495,8 +494,7 @@ ORDER BY duration</CommandText>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>thisIsTheByLine</DataSetName>
-            <Top>9.82452cm</Top>
-            <Left>0.00001cm</Left>
+            <Top>9.03077cm</Top>
             <Height>1.82646cm</Height>
             <Width>12.1702cm</Width>
             <ZIndex>1</ZIndex>
@@ -856,7 +854,7 @@ ORDER BY duration</CommandText>
             </ChartNoDataMessage>
             <DataSetName>thisIsTheByLine</DataSetName>
             <Top>0.6cm</Top>
-            <Height>9.04813cm</Height>
+            <Height>8.25438cm</Height>
             <Width>12.17021cm</Width>
             <ZIndex>2</ZIndex>
             <Style>
@@ -1217,9 +1215,9 @@ ORDER BY duration</CommandText>
               </Style>
             </ChartNoDataMessage>
             <DataSetName>byLine</DataSetName>
-            <Top>0.6cm</Top>
-            <Left>12.8934cm</Left>
-            <Height>9.04813cm</Height>
+            <Top>0.63528cm</Top>
+            <Left>12.94223cm</Left>
+            <Height>8.2191cm</Height>
             <Width>12.08736cm</Width>
             <ZIndex>3</ZIndex>
             <Style>
@@ -1264,7 +1262,7 @@ ORDER BY duration</CommandText>
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>4.60428in</Height>
+        <Height>4.37511in</Height>
         <Style />
       </Body>
       <Width>9.85417in</Width>

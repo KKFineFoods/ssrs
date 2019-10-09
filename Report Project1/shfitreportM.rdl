@@ -3,8 +3,8 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="morningShift">
-      <DataSourceReference>live_view</DataSourceReference>
+    <DataSource Name="morningShifts">
+      <DataSourceReference>local</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>73ad56be-2ee1-41ff-8697-c23f7634c43e</rd:DataSourceID>
     </DataSource>
@@ -12,16 +12,13 @@
   <DataSets>
     <DataSet Name="JobRuns">
       <Query>
-        <DataSourceName>morningShift</DataSourceName>
+        <DataSourceName>morningShifts</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@dateto">
-            <Value>=Parameters!dateto.Value</Value>
-          </QueryParameter>
         </QueryParameters>
-        <CommandText>select * FROM [kkfactorydw].[dbo].[jobInfo] where actFinishDate between @datefrom and @dateto and shift6to6 = @datefrom and hour  between 6 and 14 </CommandText>
+        <CommandText>select * FROM jobInfo_v where actFinishDate = @datefrom and shift6to6 = @datefrom and hour  between 6 and 14 and cellAssetDesc not like 'U1%'</CommandText>
       </Query>
       <Fields>
         <Field Name="cellAssetDesc">
@@ -128,17 +125,16 @@
     </DataSet>
     <DataSet Name="EngDt">
       <Query>
-        <DataSourceName>morningShift</DataSourceName>
+        <DataSourceName>morningShifts</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(5) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
-ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
-FROM stoppages_lives
-WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour &gt; 6 and dtHour &lt; 14 and  stoppages_lives.category = 'ENGINEERING'
-GROUP BY stoppages_lives.eventasset
+        <CommandText>SELECT TOP(5) stoppages_M.eventasset,sum(stoppages_M.durration)duration
+FROM stoppages_M
+WHERE  stoppages_M.shift6to6 = @datefrom and  dtHour between 6 and 14 and stoppages_M.category = 'ENGINEERING' AND stoppages_M.eventasset &lt;&gt; 'SLOW RUN BURGER MACHINE'
+GROUP BY stoppages_M.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -150,24 +146,20 @@ order by sum(durration) desc</CommandText>
           <DataField>duration</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="RowNumber">
-          <DataField>RowNumber</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="MANdt">
       <Query>
-        <DataSourceName>morningShift</DataSourceName>
+        <DataSourceName>morningShifts</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(5) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration
-FROM stoppages_lives
-WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour &gt; 6 and dtHour &lt; 14 and stoppages_lives.category = 'MANAGEMENT' AND stoppages_lives.eventasset &lt;&gt; 'SLOW RUN BURGER MACHINE'
-GROUP BY stoppages_lives.eventasset
+        <CommandText>SELECT TOP(5) stoppages_M.eventasset,sum(stoppages_M.durration)duration
+FROM stoppages_M
+WHERE  stoppages_M.shift6to6 = @datefrom and  dtHour BETWEEN 6 AND 14 and stoppages_M.category = 'MANAGEMENT' AND stoppages_M.eventasset &lt;&gt; 'SLOW RUN BURGER MACHINE'
+GROUP BY stoppages_M.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -183,16 +175,16 @@ order by sum(durration) desc</CommandText>
     </DataSet>
     <DataSet Name="downtimeChart">
       <Query>
-        <DataSourceName>morningShift</DataSourceName>
+        <DataSourceName>morningShifts</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT stoppages_lives.linename,sum(stoppages_lives.durration)duration
-FROM stoppages_lives
-WHERE  stoppages_lives.shift6to6 = @datefrom and  dtHour between 6 and 14
-GROUP BY stoppages_lives.linename
+        <CommandText>SELECT stoppages_M.linename,sum(stoppages_M.durration)duration
+FROM stoppages_M
+WHERE  stoppages_M.shift6to6 = @datefrom and  dtHour between 6 and 14
+GROUP BY stoppages_M.linename
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -1612,16 +1604,50 @@ order by sum(durration) desc</CommandText>
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="Textbox4">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Parameters!datefrom.Value</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>dddd, d MMMM yyyy</Format>
+                      <Color>DimGray</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>1.72006cm</Top>
+            <Left>9.1081cm</Left>
+            <Height>0.6cm</Height>
+            <Width>5.56097cm</Width>
+            <ZIndex>8</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
           <Rectangle Name="Rectangle1">
             <PageBreak>
               <BreakLocation>End</BreakLocation>
             </PageBreak>
             <KeepTogether>true</KeepTogether>
-            <Top>11.56359cm</Top>
+            <Top>11.59887cm</Top>
             <Left>2.2567cm</Left>
             <Height>2.5cm</Height>
             <Width>5cm</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>9</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1629,7 +1655,7 @@ order by sum(durration) desc</CommandText>
             </Style>
           </Rectangle>
         </ReportItems>
-        <Height>5.53685in</Height>
+        <Height>5.55074in</Height>
         <Style />
       </Body>
       <Width>6.04371in</Width>

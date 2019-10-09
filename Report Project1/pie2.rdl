@@ -3,16 +3,16 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="pie_test">
-      <DataSourceReference>live_view</DataSourceReference>
+    <DataSource Name="local">
+      <DataSourceReference>local</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>c1363df6-6618-4c3c-9abc-c8db30eaa82e</rd:DataSourceID>
+      <rd:DataSourceID>40afcdf3-b1e7-46eb-811a-57b2e46b6271</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="management">
       <Query>
-        <DataSourceName>pie_test</DataSourceName>
+        <DataSourceName>local</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -21,13 +21,13 @@
             <Value>=Parameters!dateto.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(10) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
+        <CommandText>SELECT TOP(10) eventasset,sum(durration)duration,
 ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
-FROM stoppages_lives
+FROM stoppages_M
 WHERE 
-stoppages_lives.category IN  ('MANAGEMENT', 'DEVELOPMENT')  AND
-stoppages_lives.shift6to6 BETWEEN @datefrom AND @dateto AND stoppages_lives.eventasset NOT LIKE '%SLOW %' 
-GROUP BY stoppages_lives.eventasset
+category IN  ('MANAGEMENT', 'DEVELOPMENT')  AND
+stoppages_M.shift6to6 BETWEEN @datefrom AND @dateto AND stoppages_M.eventasset NOT LIKE '%SLOW %' AND stoppages_M.eventasset not like 'SPLITTING BACON'
+GROUP BY stoppages_M.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -47,7 +47,7 @@ order by sum(durration) desc</CommandText>
     </DataSet>
     <DataSet Name="DataSet2_pie_test">
       <Query>
-        <DataSourceName>pie_test</DataSourceName>
+        <DataSourceName>local</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -56,12 +56,12 @@ order by sum(durration) desc</CommandText>
             <Value>=Parameters!dateto.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(10) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
+        <CommandText>SELECT TOP(10) eventasset,sum(durration)duration,
 ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
-FROM stoppages_lives
-WHERE stoppages_lives.eventasset IN ( 'CHANGEOVER CLEANDOWN','CHANGEOVER' ,'FILM CHANGE' ,'ROLL CHANGE', 'POUCH SIZE CHANGEOVER','STARTUP TRAYBAKE LINE', 'SET UP BEFORE SHIFT', 'RIBBON CHANGE')
-AND stoppages_lives.shift6to6 BETWEEN @datefrom AND @dateto
-GROUP BY stoppages_lives.eventasset
+FROM stoppages_M
+WHERE eventasset IN ( 'CHANGEOVER CLEANDOWN','CHANGEOVER' ,'FILM CHANGE' ,'ROLL CHANGE', 'POUCH SIZE CHANGEOVER','STARTUP TRAYBAKE LINE', 'SET UP BEFORE SHIFT', 'RIBBON CHANGE')
+AND shift6to6 BETWEEN @datefrom AND @dateto
+GROUP BY eventasset
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -246,8 +246,8 @@ order by sum(durration) desc</CommandText>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>management</DataSetName>
-            <Top>6.57049cm</Top>
-            <Left>0.51688cm</Left>
+            <Top>5.715cm</Top>
+            <Left>0.54337cm</Left>
             <Height>1.2cm</Height>
             <Width>11.83916cm</Width>
             <Style>
@@ -606,7 +606,7 @@ order by sum(durration) desc</CommandText>
             </ChartNoDataMessage>
             <DataSetName>management</DataSetName>
             <Left>0.51688cm</Left>
-            <Height>6.3941cm</Height>
+            <Height>5.67973cm</Height>
             <Width>11.83918cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -967,8 +967,8 @@ order by sum(durration) desc</CommandText>
               </Style>
             </ChartNoDataMessage>
             <DataSetName>DataSet2_pie_test</DataSetName>
-            <Top>8.11445cm</Top>
-            <Left>0.51688cm</Left>
+            <Top>7.34716cm</Top>
+            <Left>0.51687cm</Left>
             <Height>6.42882cm</Height>
             <Width>11.83916cm</Width>
             <ZIndex>2</ZIndex>
@@ -1143,7 +1143,7 @@ order by sum(durration) desc</CommandText>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet2_pie_test</DataSetName>
-            <Top>14.57854cm</Top>
+            <Top>13.95237cm</Top>
             <Left>0.51687cm</Left>
             <Height>1.2cm</Height>
             <Width>11.83917cm</Width>
@@ -1154,11 +1154,61 @@ order by sum(durration) desc</CommandText>
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="Textbox4">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Parameters!dateto.Value</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>dddd, d MMMM yyyy</Format>
+                      <Color>DimGray</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>0.34396cm</Top>
+            <Left>7.21019cm</Left>
+            <Height>0.6cm</Height>
+            <Width>5.14584cm</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Rectangle Name="Rectangle1">
+            <PageBreak>
+              <BreakLocation>End</BreakLocation>
+            </PageBreak>
+            <KeepTogether>true</KeepTogether>
+            <Top>15.29348cm</Top>
+            <Left>0.54337cm</Left>
+            <Height>2.5cm</Height>
+            <Width>5cm</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Rectangle>
         </ReportItems>
-        <Height>6.21875in</Height>
+        <Height>7.00531in</Height>
         <Style />
       </Body>
-      <Width>4.90626in</Width>
+      <Width>4.87501in</Width>
       <Page>
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>21cm</PageWidth>

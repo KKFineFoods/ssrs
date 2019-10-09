@@ -3,8 +3,8 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="FrontPage">
-      <DataSourceReference>live_view</DataSourceReference>
+    <DataSource Name="FrontPages">
+      <DataSourceReference>local</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>fb0ebd20-53f0-4e63-98e2-351e9f6abc0e</rd:DataSourceID>
     </DataSource>
@@ -12,7 +12,7 @@
   <DataSets>
     <DataSet Name="attend">
       <Query>
-        <DataSourceName>FrontPage</DataSourceName>
+        <DataSourceName>FrontPages</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -28,7 +28,7 @@ when a.shift_id = 2 then 'Afternoon'
 when a.shift_id = 3 then 'Nights'
 end) as shift_id
 , a.department
-  FROM [kkfactorydw].[dbo].[attends] ats, [kkfactorydw].[dbo].[attendees] as a
+  FROM attends as ats, attendees as a
   where ats.name = a.name and ats.shift_id = a.shift_id and cast(ats.created_at as date) between @datefrom and @dateto</CommandText>
       </Query>
       <Fields>
@@ -48,7 +48,7 @@ end) as shift_id
     </DataSet>
     <DataSet Name="prodVsDt">
       <Query>
-        <DataSourceName>FrontPage</DataSourceName>
+        <DataSourceName>FrontPages</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -59,12 +59,12 @@ end) as shift_id
         </QueryParameters>
         <CommandText>SELECT xa.cellAssetDesc as line, xa.cnt as jobs, xa.prodtime, xa.unprodtime, xb.duration
 FROM 
- (select cellAssetDesc,count(*) cnt,sum(prodTimeTd)prodTime,sum(unprodTimeTd) unprodTime, sum(planUnprodTimeTd) planUnprodTime
-   FROM [kkfactorydw].[dbo].[productRuns]
+ (select cellAssetDesc,count(*) cnt,sum(PDT)prodTime,sum(UDT) unprodTime 
+   FROM jobInfo_v
    WHERE shift6to6 between @datefrom and @dateto
    GROUP BY cellAssetDesc) as Xa,
   (SELECT linename, sum(durration) duration
-  FROM [kkfactorydw].[dbo].[stoppages_lives]
+  FROM stoppages_M
   WHERE shift6to6 between @datefrom and @dateto
   GROUP BY linename) as Xb
   where Xa.cellAssetDesc = Xb.linename</CommandText>
@@ -94,7 +94,7 @@ FROM
     </DataSet>
     <DataSet Name="jobsMeals">
       <Query>
-        <DataSourceName>FrontPage</DataSourceName>
+        <DataSourceName>FrontPages</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -104,7 +104,7 @@ FROM
           </QueryParameter>
         </QueryParameters>
         <CommandText>select cellAssetDesc, sum(qtyOutTd) sumQtyOut, COUNT(*) jobs
-from [kkfactorydw].[dbo].[productRuns] 
+from productRuns 
 where ProdTimeTd &gt; 0 and shift6to6 BETWEEN @datefrom AND @dateto
 group by cellAssetDesc
 order by cellAssetDesc</CommandText>
@@ -1722,7 +1722,7 @@ order by cellAssetDesc</CommandText>
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>4.37476in</Height>
+        <Height>3.92684in</Height>
         <Style>
           <Border>
             <Style>None</Style>

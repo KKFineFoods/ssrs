@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="local">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=KKDT317\MDATA;Initial Catalog=CDCFactory</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>5e418961-33b3-45ea-9edf-70b899046a5a</DataSourceID>
+</RptDataSource>

@@ -8,8 +8,8 @@
         <ReportItems>
           <Subreport Name="Subreport1">
             <ReportName>pie1</ReportName>
-            <Top>7.6cm</Top>
-            <Height>7.6cm</Height>
+            <Top>7.25604cm</Top>
+            <Height>7.90868cm</Height>
             <Width>7.5cm</Width>
             <Style>
               <Border>
@@ -19,8 +19,8 @@
           </Subreport>
           <Subreport Name="Subreport2">
             <ReportName>pie2</ReportName>
-            <Top>15.2cm</Top>
-            <Height>7.6cm</Height>
+            <Top>15.23528cm</Top>
+            <Height>7.38833cm</Height>
             <Width>7.5cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -31,7 +31,7 @@
           </Subreport>
           <Subreport Name="Subreport3">
             <ReportName>changeovers</ReportName>
-            <Height>7.6cm</Height>
+            <Height>7.15021cm</Height>
             <Width>7.5cm</Width>
             <ZIndex>2</ZIndex>
             <Style>
@@ -66,8 +66,8 @@
           </Subreport>
           <Subreport Name="Subreport6">
             <ReportName>shiftreportN</ReportName>
-            <Top>38.37041cm</Top>
-            <Height>7.33542cm</Height>
+            <Top>38.07056cm</Top>
+            <Height>7.63527cm</Height>
             <Width>7.5cm</Width>
             <ZIndex>5</ZIndex>
             <Style>
@@ -112,6 +112,15 @@
       </DefaultValue>
       <Prompt>to</Prompt>
     </ReportParameter>
+    <ReportParameter Name="dtDay">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=cdate(format(DateAdd("d", -1, Now),"yyyy/MM/dd"))</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>dtDay</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -127,6 +136,11 @@
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>dateto</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>dtDay</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

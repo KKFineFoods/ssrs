@@ -159,7 +159,7 @@ ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber
 FROM stoppages_lives
 WHERE 
 stoppages_lives.category IN  ('MANAGEMENT', 'DEVELOPMENT')  AND
-stoppages_lives.shift6to6 BETWEEN @datefrom AND @dateto AND stoppages_lives.eventasset NOT LIKE '%SLOW %' 
+stoppages_lives.shift6to6 BETWEEN @datefrom AND @dateto AND stoppages_lives.eventasset NOT LIKE '%SLOW %' AND eventasset not like 'SPLITTING BACON'
 GROUP BY stoppages_lives.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
@@ -2210,7 +2210,7 @@ order by sum(durration) desc</CommandText>
       <DataType>Float</DataType>
       <DefaultValue>
         <Values>
-          <Value>49.6</Value>
+          <Value>46.43</Value>
         </Values>
       </DefaultValue>
       <Prompt>oee</Prompt>

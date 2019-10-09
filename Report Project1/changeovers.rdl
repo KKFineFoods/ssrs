@@ -4,15 +4,20 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="changeovers">
-      <DataSourceReference>live_view</DataSourceReference>
+      <DataSourceReference>local</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>2d299fe1-ba66-4448-8642-fda0fd7f5794</rd:DataSourceID>
+    </DataSource>
+    <DataSource Name="local">
+      <DataSourceReference>local</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>19fde82d-d647-4d99-9a73-6d5402a2e85a</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="changeovers">
       <Query>
-        <DataSourceName>changeovers</DataSourceName>
+        <DataSourceName>local</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -22,7 +27,7 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>select cellAssetDesc,sum(qtyOutTd)sumQtyOut,COUNT(*)jobs
-from [kkfactorydw].[dbo].[productRuns]
+from productRuns
 where ProdTimeTd &gt; 0 and shift6to6 BETWEEN @datefrom AND @dateto
 group by cellAssetDesc
 order by cellAssetDesc</CommandText>
@@ -44,7 +49,7 @@ order by cellAssetDesc</CommandText>
     </DataSet>
     <DataSet Name="changeoversCleandown">
       <Query>
-        <DataSourceName>changeovers</DataSourceName>
+        <DataSourceName>local</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -54,7 +59,7 @@ order by cellAssetDesc</CommandText>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT linename,eventasset,sum(durration)duration,count(*) cnt
-from [kkfactorydw].[dbo].[stoppages_lives]
+from stoppages_m
 WHERE eventasset in( 'CHANGEOVER', 'CHANGEOVER CLEANDOWN')
 AND shift6to6 BETWEEN @datefrom AND @dateto
 GROUP BY linename,eventasset
@@ -2001,8 +2006,8 @@ order by linename</CommandText>
               <BreakLocation>End</BreakLocation>
             </PageBreak>
             <KeepTogether>true</KeepTogether>
-            <Top>15.04595cm</Top>
-            <Left>0.92604cm</Left>
+            <Top>15.01067cm</Top>
+            <Left>0.03528cm</Left>
             <Height>2.5cm</Height>
             <Width>5cm</Width>
             <ZIndex>7</ZIndex>
@@ -2013,7 +2018,7 @@ order by linename</CommandText>
             </Style>
           </Rectangle>
         </ReportItems>
-        <Height>6.99663in</Height>
+        <Height>6.89397in</Height>
         <Style />
       </Body>
       <Width>6.625in</Width>

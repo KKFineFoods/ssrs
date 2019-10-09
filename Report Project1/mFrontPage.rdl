@@ -3,8 +3,8 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="mFrontPage">
-      <DataSourceReference>live_view</DataSourceReference>
+    <DataSource Name="mFrontPages">
+      <DataSourceReference>local</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>2133fe1b-39aa-4ba1-a092-38279f0fa8fa</rd:DataSourceID>
     </DataSource>
@@ -12,22 +12,14 @@
   <DataSets>
     <DataSet Name="Atendance">
       <Query>
-        <DataSourceName>mFrontPage</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@datefrom">
-            <Value>=Parameters!datefrom.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@dateto">
-            <Value>=Parameters!dateto.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>  select ats.department, (((count(at.shift_id)*100)/5)/4) as prce, (case at.shift_id
+        <DataSourceName>mFrontPages</DataSourceName>
+        <CommandText>  select ats.department, count(at.shift_id) as prce, (case at.shift_id
   when  1 then 'Morning'
   when  2 then 'Afternoon'
   when  3 then 'Night'
   end) as shift
-  FROM [kkfactorydw].[dbo].[attends] as at, [kkfactorydw].[dbo].[attendees] as ats
-  where at.name = ats.name and at.shift_id = ats.shift_id and cast(at.created_at as date) between @datefrom and @dateto
+  FROM attends as at,attendees as ats
+  where at.name = ats.name and at.shift_id = ats.shift_id and cast(at.created_at as date) between '2019-07-01' and '2019-07-31'
   group by  at.shift_id, ats.department</CommandText>
       </Query>
       <Fields>
@@ -47,7 +39,7 @@
     </DataSet>
     <DataSet Name="topchartMealsByLine">
       <Query>
-        <DataSourceName>mFrontPage</DataSourceName>
+        <DataSourceName>mFrontPages</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -57,7 +49,7 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>select cellAssetDesc,sum(qtyOutTd)sumQtyOut,COUNT(*)jobs
-from [kkfactorydw].[dbo].[productRuns]
+from productRuns
 where ProdTimeTd &gt; 0 and shift6to6 BETWEEN @datefrom AND @dateto
 group by cellAssetDesc
 order by cellAssetDesc</CommandText>
@@ -79,7 +71,7 @@ order by cellAssetDesc</CommandText>
     </DataSet>
     <DataSet Name="JobsMeals">
       <Query>
-        <DataSourceName>mFrontPage</DataSourceName>
+        <DataSourceName>mFrontPages</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -89,7 +81,7 @@ order by cellAssetDesc</CommandText>
           </QueryParameter>
         </QueryParameters>
         <CommandText>select cellAssetDesc, sum(qtyOutTd) sumQtyOut, COUNT(*) jobs
-from [kkfactorydw].[dbo].[productRuns] 
+from productRuns
 where ProdTimeTd &gt; 0 and shift6to6 BETWEEN @datefrom AND @dateto
 group by cellAssetDesc
 order by cellAssetDesc</CommandText>
@@ -111,7 +103,7 @@ order by cellAssetDesc</CommandText>
     </DataSet>
     <DataSet Name="ENGINEERING">
       <Query>
-        <DataSourceName>mFrontPage</DataSourceName>
+        <DataSourceName>mFrontPages</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -120,13 +112,21 @@ order by cellAssetDesc</CommandText>
             <Value>=Parameters!dateto.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(10) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
-ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
-FROM stoppages_lives
-WHERE stoppages_lives.category = 'ENGINEERING'
-AND stoppages_lives.shift6to6 BETWEEN @datefrom AND @dateto
-GROUP BY stoppages_lives.eventasset
-order by sum(durration) desc</CommandText>
+        <CommandText>SELECT top 10 Xa.eventasset,Xa.duration
+FROM (SELECT eventasset,sum(durration)duration
+FROM stoppages_M
+WHERE category = 'ENGINEERING' and eventasset not LIKE 'HOPPER%'
+/*AND shift6to6 BETWEEN @datefrom AND @dateto*/
+AND shift6to6 BETWEEN '2019-07-01' and '2019-07-31'
+   GROUP BY eventasset
+UNION
+SELECT LEFT(eventasset,6)+'S'eventasset,sum(durration)duration
+FROM stoppages_M
+WHERE eventasset LIKE 'HOPPER%'
+   /*AND shift6to6 BETWEEN @datefrom AND @dateto*/
+   AND shift6to6 BETWEEN @datefrom AND @dateto
+   GROUP BY LEFT(eventasset,6))as Xa
+order by Xa.duration desc</CommandText>
       </Query>
       <Fields>
         <Field Name="eventasset">
@@ -137,15 +137,11 @@ order by sum(durration) desc</CommandText>
           <DataField>duration</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="RowNumber">
-          <DataField>RowNumber</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="Management">
       <Query>
-        <DataSourceName>mFrontPage</DataSourceName>
+        <DataSourceName>mFrontPages</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@datefrom">
             <Value>=Parameters!datefrom.Value</Value>
@@ -154,13 +150,13 @@ order by sum(durration) desc</CommandText>
             <Value>=Parameters!dateto.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT TOP(10) stoppages_lives.eventasset,sum(stoppages_lives.durration)duration,
+        <CommandText>SELECT TOP(10) stoppages_M.eventasset,sum(stoppages_M.durration)duration,
 ROW_NUMBER() OVER (ORDER BY sum(durration)desc) AS RowNumber 
-FROM stoppages_lives
+FROM stoppages_M
 WHERE 
-stoppages_lives.category IN  ('MANAGEMENT', 'DEVELOPMENT')  AND
-stoppages_lives.shift6to6 BETWEEN @datefrom AND @dateto AND stoppages_lives.eventasset NOT LIKE '%SLOW %' 
-GROUP BY stoppages_lives.eventasset
+stoppages_M.category IN  ('MANAGEMENT', 'DEVELOPMENT')  AND
+stoppages_M.shift6to6 BETWEEN @datefrom AND @dateto AND stoppages_M.eventasset NOT LIKE '%SLOW %' 
+GROUP BY stoppages_M.eventasset
 order by sum(durration) desc</CommandText>
       </Query>
       <Fields>
@@ -2205,7 +2201,7 @@ order by sum(durration) desc</CommandText>
       <DataType>Float</DataType>
       <DefaultValue>
         <Values>
-          <Value>59.12</Value>
+          <Value>49.55</Value>
         </Values>
       </DefaultValue>
       <Prompt>oee</Prompt>
