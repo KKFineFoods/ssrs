@@ -13,13 +13,21 @@
     <DataSet Name="Atendance">
       <Query>
         <DataSourceName>mFrontPages</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@datefrom">
+            <Value>=Parameters!datefrom.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@dateto">
+            <Value>=Parameters!dateto.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>  select ats.department, count(at.shift_id) as prce, (case at.shift_id
   when  1 then 'Morning'
   when  2 then 'Afternoon'
   when  3 then 'Night'
   end) as shift
   FROM attends as at,attendees as ats
-  where at.name = ats.name and at.shift_id = ats.shift_id and cast(at.created_at as date) between '2019-07-01' and '2019-07-31'
+  where at.name = ats.name and at.shift_id = ats.shift_id and cast(at.created_at as date) BETWEEN @datefrom AND @dateto
   group by  at.shift_id, ats.department</CommandText>
       </Query>
       <Fields>
@@ -115,15 +123,13 @@ order by cellAssetDesc</CommandText>
         <CommandText>SELECT top 10 Xa.eventasset,Xa.duration
 FROM (SELECT eventasset,sum(durration)duration
 FROM stoppages_M
-WHERE category = 'ENGINEERING' and eventasset not LIKE 'HOPPER%'
-/*AND shift6to6 BETWEEN @datefrom AND @dateto*/
-AND shift6to6 BETWEEN '2019-07-01' and '2019-07-31'
+WHERE category = 'ENGINEERING' 
+AND shift6to6 BETWEEN @datefrom AND @dateto
    GROUP BY eventasset
 UNION
 SELECT LEFT(eventasset,6)+'S'eventasset,sum(durration)duration
 FROM stoppages_M
 WHERE eventasset LIKE 'HOPPER%'
-   /*AND shift6to6 BETWEEN @datefrom AND @dateto*/
    AND shift6to6 BETWEEN @datefrom AND @dateto
    GROUP BY LEFT(eventasset,6))as Xa
 order by Xa.duration desc</CommandText>
@@ -1125,7 +1131,7 @@ order by sum(durration) desc</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>MEATING ATENDANCE</Value>
+                    <Value>MEETING ATTENDANCE (%)</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                       <Color>#01b8aa</Color>
@@ -2201,7 +2207,7 @@ order by sum(durration) desc</CommandText>
       <DataType>Float</DataType>
       <DefaultValue>
         <Values>
-          <Value>49.55</Value>
+          <Value>50.31</Value>
         </Values>
       </DefaultValue>
       <Prompt>oee</Prompt>

@@ -18,7 +18,7 @@
             <Value>=Parameters!datefrom.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>select * FROM jobInfo_v where actFinishDate = @datefrom and hour  between 14 and 22 and cellAssetDesc not like 'U1%'</CommandText>
+        <CommandText>select * FROM jobInfo_v where actFinishDate = @datefrom and hour  between 14 and 22 and cellAssetDesc not like 'U1%' and  cellAssetDesc not like 'U3 MULTIVAC 1'</CommandText>
       </Query>
       <Fields>
         <Field Name="cellAssetDesc">

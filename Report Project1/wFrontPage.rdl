@@ -1952,7 +1952,7 @@ order by sum(durration) desc</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Weeekly Report Headlines</Value>
+                    <Value>Weekly Report Headlines</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Verdana</FontFamily>
@@ -1992,7 +1992,7 @@ order by sum(durration) desc</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>MEATING ATENDANCE</Value>
+                    <Value>MEETING ATTENDANCE (%)</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                       <Color>#01b8aa</Color>
@@ -2210,7 +2210,7 @@ order by sum(durration) desc</CommandText>
       <DataType>Float</DataType>
       <DefaultValue>
         <Values>
-          <Value>46.43</Value>
+          <Value>48.44</Value>
         </Values>
       </DefaultValue>
       <Prompt>oee</Prompt>

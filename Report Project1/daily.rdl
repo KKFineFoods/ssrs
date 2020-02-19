@@ -96,29 +96,14 @@
   <ReportParameters>
     <ReportParameter Name="datefrom">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=cdate(format(DateAdd("d", -1, Now),"yyyy-MM-dd"))</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>from</Prompt>
+      <Prompt>datefrom</Prompt>
     </ReportParameter>
     <ReportParameter Name="dateto">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=cdate(format(DateAdd("d", -1, Now),"yyyy/MM/dd"))</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>to</Prompt>
+      <Prompt>dateto</Prompt>
     </ReportParameter>
     <ReportParameter Name="dtDay">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=cdate(format(DateAdd("d", -1, Now),"yyyy/MM/dd"))</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>dtDay</Prompt>
     </ReportParameter>
   </ReportParameters>
