@@ -52,27 +52,29 @@
     <DataSet Include="daily_rpt.rsd" />
   </ItemGroup>
   <ItemGroup>
+    <DataSource Include="asp_comments.rds" />
+    <DataSource Include="commenting.rds" />
     <DataSource Include="live_view.rds" />
     <DataSource Include="local.rds" />
   </ItemGroup>
   <ItemGroup>
     <Report Include="afternoon.rdl" />
-    <Report Include="CDCActions.rdl" />
     <Report Include="changeBreak.rdl" />
     <Report Include="changeovers.rdl" />
     <Report Include="daily.rdl" />
     <Report Include="eng.rdl" />
+    <Report Include="engByLine.rdl" />
     <Report Include="frontPage.rdl" />
     <Report Include="jobsMeals.rdl" />
     <Report Include="mFrontPage.rdl" />
     <Report Include="pie1.rdl" />
     <Report Include="pie2.rdl" />
     <Report Include="ProductTop.rdl" />
-    <Report Include="Report1.rdl" />
     <Report Include="setup.rdl" />
     <Report Include="shfitreportM.rdl" />
     <Report Include="shiftreportN.rdl" />
     <Report Include="shiftsByLines.rdl" />
+    <Report Include="weeklyComments.rdl" />
     <Report Include="wFrontPage.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />

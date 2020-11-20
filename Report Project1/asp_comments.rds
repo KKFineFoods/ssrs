@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="asp_comments">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=KKDT317\MDATA;Initial Catalog=CDCFactory</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>799f453f-f9c8-4723-a33f-f55488a1fdb1</DataSourceID>
+</RptDataSource>

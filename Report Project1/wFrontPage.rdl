@@ -1874,7 +1874,7 @@ order by sum(durration) desc</CommandText>
                 <ParentItem>RadialGauges.RadialGauge1</ParentItem>
               </GaugeLabel>
               <GaugeLabel Name="GaugeLabel1">
-                <Text>OEE</Text>
+                <Text>High Care OEE</Text>
                 <TextShadowOffset>0pt</TextShadowOffset>
                 <UseFontPercent>true</UseFontPercent>
                 <Style>
@@ -2210,7 +2210,7 @@ order by sum(durration) desc</CommandText>
       <DataType>Float</DataType>
       <DefaultValue>
         <Values>
-          <Value>48.44</Value>
+          <Value>48.79</Value>
         </Values>
       </DefaultValue>
       <Prompt>oee</Prompt>

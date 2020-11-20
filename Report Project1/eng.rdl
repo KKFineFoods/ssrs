@@ -243,7 +243,7 @@ GROUP BY  stoppages_m.linename</CommandText>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>byLine</DataSetName>
-            <Top>9.04841cm</Top>
+            <Top>8.3164cm</Top>
             <Left>12.94223cm</Left>
             <Height>1.2cm</Height>
             <Width>11.47882cm</Width>
@@ -494,7 +494,8 @@ GROUP BY  stoppages_m.linename</CommandText>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>thisIsTheByLine</DataSetName>
-            <Top>9.03077cm</Top>
+            <Top>8.3164cm</Top>
+            <Left>0.00001cm</Left>
             <Height>1.82646cm</Height>
             <Width>12.1702cm</Width>
             <ZIndex>1</ZIndex>
@@ -854,7 +855,7 @@ GROUP BY  stoppages_m.linename</CommandText>
             </ChartNoDataMessage>
             <DataSetName>thisIsTheByLine</DataSetName>
             <Top>0.6cm</Top>
-            <Height>8.25438cm</Height>
+            <Height>7.64584cm</Height>
             <Width>12.17021cm</Width>
             <ZIndex>2</ZIndex>
             <Style>
@@ -1217,7 +1218,7 @@ GROUP BY  stoppages_m.linename</CommandText>
             <DataSetName>byLine</DataSetName>
             <Top>0.63528cm</Top>
             <Left>12.94223cm</Left>
-            <Height>8.2191cm</Height>
+            <Height>7.61056cm</Height>
             <Width>12.08736cm</Width>
             <ZIndex>3</ZIndex>
             <Style>

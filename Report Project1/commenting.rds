@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="commenting">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=KK-HQ-MES-01;Initial Catalog=Commenting</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>e9e88bf5-1b3c-4f58-8393-8659fa72dd57</DataSourceID>
+</RptDataSource>
